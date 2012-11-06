@@ -130,7 +130,7 @@ class Game(object):
                     if not self.game_over:
                         row = self.playfield.cursor_x
                         col = self.playfield.cursor_y
-                        if self.playfield.gridbox[col][row] != Ingredient.EMPTY and self.playfield.gridbox[col][row+1] != Ingredient.EMPTY:
+                        if self.playfield.gridbox[col][row] != Ingredient.EMPTY or self.playfield.gridbox[col][row+1] != Ingredient.EMPTY:
                             temp = self.playfield.gridbox[col][row]
                             self.playfield.gridbox[col][row] = self.playfield.gridbox[col][row+1]
                             self.playfield.gridbox[col][row+1] = temp
