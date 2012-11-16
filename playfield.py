@@ -22,7 +22,8 @@ class Playfield(object):
         self.gridbox = [[Ingredient.EMPTY for row in xrange(Playfield.ROW)] for col in xrange(Playfield.COL)]
         for col in reversed(xrange(Playfield.COL - 1 - row_height, Playfield.COL)):
             for row in xrange(Playfield.ROW):
-                self.gridbox[col][row] = random.randrange(Ingredient.SIZE)
+                while self.gridbox[col][row] == self.gridbox[col][row - 1] or self.gridbox[col][row] == self.gridbox[col - 1][row]:
+                    self.gridbox[col][row] = random.randrange(Ingredient.SIZE)
                 
     # initialize the playfield gridbox
     def startState(self):
@@ -89,6 +90,7 @@ class Playfield(object):
             for row in xrange(Playfield.ROW):
                 self.gridbox[col][row]  = self.gridbox[col+1][row]
         self._add_row()
+        
         
     # add random row to the bottom of the playfield
     def _add_row(self):
@@ -195,6 +197,22 @@ class Playfield(object):
                     screen.blit(self.ingredient.get_teal_img(), (grid_x_offset, grid_y_offset))
                 grid_x_offset += Playfield.GRID_WIDTH
             grid_y_offset += Playfield.GRID_HEIGHT
+            
+    def getIngredients(self, col, row):
+        if self.gridbox[col][row] == Ingredient.CARROT:
+            return "carrot"
+        elif self.gridbox[col][row] == Ingredient.TOMATO:
+            return "tomato"
+        elif self.gridbox[col][row] == Ingredient.BLUE:
+            return "blue"
+        elif self.gridbox[col][row] == Ingredient.GREEN:
+            return "green"
+        elif self.gridbox[col][row] == Ingredient.PURPLE:
+            return "purple"
+        elif self.gridbox[col][row] == Ingredient.RED:
+            return "red"
+        elif self.gridbox[col][row] == Ingredient.TEAL:
+            return "teal"      
             
     def draw_cursor(self, screen, x, y):
         pygame.draw.rect(screen, Playfield.CURSOR_COLOR, [x * Playfield.GRID_WIDTH + Game.FRIDGE_X, y * Playfield.GRID_HEIGHT + Game.FRIDGE_Y, Playfield.CURSOR_WIDTH, Playfield.CURSOR_HEIGHT], 5)

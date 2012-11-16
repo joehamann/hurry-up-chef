@@ -10,16 +10,29 @@ class Ingredient(object):
     EMPTY = -1
     SIZE = 7
     CARROT, TOMATO, BLUE, GREEN, PURPLE, RED, TEAL = xrange(SIZE)
+    ANIM = -2
+    WHITE = (255,255,255)
+    BLACK = (0,0,0)
+    
     
     # initialize ingredient images
     def __init__(self):
-        self.carrot_img = pygame.image.load(os.path.join('image', 'carrot.png')).convert_alpha()
-        self.tomato_img = pygame.image.load(os.path.join('image', 'tomato.png')).convert_alpha()
-        self.blue_img = pygame.image.load(os.path.join('image', 'blue.png')).convert_alpha()
-        self.green_img = pygame.image.load(os.path.join('image', 'green.png')).convert_alpha()
-        self.purple_img = pygame.image.load(os.path.join('image', 'purple.png')).convert_alpha()
-        self.red_img = pygame.image.load(os.path.join('image', 'red.png')).convert_alpha()
-        self.teal_img = pygame.image.load(os.path.join('image', 'teal.png')).convert_alpha()
+        self.carrot_img = pygame.image.load(os.path.join('image', 'carrot.png')).convert()
+        self.carrot_img.set_colorkey(Ingredient.WHITE)
+        self.carrot_img.set_colorkey(Ingredient.BLACK)
+        self.tomato_img = pygame.image.load(os.path.join('image', 'tomato.png')).convert()
+        self.tomato_img.set_colorkey(Ingredient.WHITE)
+        self.tomato_img.set_colorkey(Ingredient.BLACK)
+        self.blue_img = pygame.image.load(os.path.join('image', 'blue.png')).convert()
+        self.blue_img.set_colorkey(Ingredient.WHITE)
+        self.green_img = pygame.image.load(os.path.join('image', 'green.png')).convert()
+        self.green_img.set_colorkey(Ingredient.WHITE)
+        self.purple_img = pygame.image.load(os.path.join('image', 'purple.png')).convert()
+        self.purple_img.set_colorkey(Ingredient.WHITE)
+        self.red_img = pygame.image.load(os.path.join('image', 'red.png')).convert()
+        self.red_img.set_colorkey(Ingredient.WHITE)
+        self.teal_img = pygame.image.load(os.path.join('image', 'teal.png')).convert()
+        self.teal_img.set_colorkey(Ingredient.WHITE)
         self.ingredient_list = [self.carrot_img, self.tomato_img, self.blue_img, self.green_img, self.purple_img, self.red_img, self.teal_img]
         
     def get_carrot_img(self):
