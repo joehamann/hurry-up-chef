@@ -1,4 +1,8 @@
 Thumbs.db
 *.pyc
-test
-sdsfd
+.project
+.pydevproject
+_bak
+_bak/*
+_bak/
+.DS_Store
