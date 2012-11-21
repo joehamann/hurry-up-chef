@@ -6,6 +6,7 @@
 """
 import os, sys, pygame
 from playfield import *
+from timeboard import *
 
 # Game class to run() the game
 class Game(object):
@@ -21,7 +22,9 @@ class Game(object):
         #pygame.mouse.set_visible(False) # hide the mouse cursor
         pygame.key.set_repeat(20,120) # generate multiple KEYDOWN events from keys held down
         self.clock = pygame.time.Clock() # create an object to help track time
+        self.timeboard = Timeboard(pygame.time.get_ticks())
         ###pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
+        pygame.time.set_timer(UPDATE_TIMEBOARD, 1000) # call UPDATE_TIMEBOARD event every 1 seconds
         self.init() # initialize the game
         
     # initialize the game
@@ -65,6 +68,9 @@ class Game(object):
                     if not self.game_over:
                         print 'moveup'
                         ###self.playfield.move_up()
+                elif event.type == UPDATE_TIMEBOARD:
+                    self.timeboard.update()
+                    self.timeboard.print_time()
             # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
             
             
