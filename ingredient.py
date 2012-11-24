@@ -12,7 +12,7 @@ class Ingredient(pygame.sprite.Sprite):
         self.x = self.col * GRID_WIDTH + OFFSET_X + 1
         self.y = self.row * GRID_HEIGHT + OFFSET_Y + 1
         
-        self.speed = 25
+        self.swap_speed = 5
         self.moving_right = False
         self.moving_left = False
         self.ingredient_to_left = None
@@ -20,6 +20,13 @@ class Ingredient(pygame.sprite.Sprite):
         self.dest_left = self.x - GRID_WIDTH
         self.dest_right = self.x + GRID_WIDTH
         
+        self.move_down_speed = 50 #50 1
+        self.dest_row = self.row
+        self.dest_y = self.y
+        self.move_down_list = []
+        
+        if name == BACON:
+            self._images = Image.load_sliced_sprites(50, 50, 'baconsprite.png')
         if name == BELLPEPPER:
             self._images = Image.load_sliced_sprites(50, 50, 'bellpeppersprite.png')
         elif name == CARROT:
@@ -46,6 +53,11 @@ class Ingredient(pygame.sprite.Sprite):
         self.moving_left = True
         self.ingredient_to_left = left_ingredient
         
+    def move_down(self, dest_row, move_down_list):
+        self.dest_row = dest_row
+        self.dest_y = dest_row * GRID_HEIGHT + OFFSET_Y + 1
+        self.move_down_list = move_down_list
+        
     def update(self, t):
         # Note that this doesn't work if it's been more that self._delay
         # time between calls to update(); we only update the image once
@@ -58,59 +70,34 @@ class Ingredient(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         
+        # move down logic
+        if (self.y < self.dest_y):
+            self.y += self.move_down_speed
+            if self.y > self.dest_y:
+                self.y = self.dest_y
+            if self.y == self.dest_y:
+                #print 'done moving from', self.row, 'to', self.dest_row, 'for col', self.col
+                # update gridbox
+                # remove sprite and add sprite
+                self.playfield.move_down_set.discard((self.row, self.dest_row, self.col, self.name))
+                if not self.playfield.move_down_set:
+                    self.playfield.update_move_down(self.move_down_list)
+                #move_down_set.add((src_row, dest_row, col))
+        
         # swapping logic
         if (self.moving_right):
             if (self.x < self.dest_right):
-                self.x += self.speed
+                self.x += self.swap_speed
             else:
                 self.moving_right = False
-                print "moved right: ",self.row, ",", self.col
-                if (self.ingredient_to_right is None or (self.ingredient_to_right is not None and not self.ingredient_to_right.moving_left)):
-                    print 'done swapping moved from left to right'
+                if (not isinstance(self.ingredient_to_right, Ingredient) or (isinstance(self.ingredient_to_right, Ingredient) and not self.ingredient_to_right.moving_left)):
                     self.playfield.update_swap(self.row, self.col)
         
         if (self.moving_left):
             if (self.x > self.dest_left):
-                self.x -= self.speed
+                self.x -= self.swap_speed
             else:
                 self.moving_left = False
-                print "moved left: ",self.row, ",", self.col
-                if (self.ingredient_to_left is None or (self.ingredient_to_left is not None and not self.ingredient_to_left.moving_right)):
-                    print 'done swapping moved from right to left'
+                if (not isinstance(self.ingredient_to_left, Ingredient) or (isinstance(self.ingredient_to_left, Ingredient) and not self.ingredient_to_left.moving_right)):
                     self.playfield.update_swap(self.row, self.col-1)
                     
-        
-        
-        
-        
-        
-    """
-        #self.swapping = False
-        #self.other_ingredient = None
-        #self.dest_x = self.x
-        
-        
-    def swap(self, other_ingredient):
-        self.swapping = True
-        self.dest_x += GRID_WIDTH
-        self.other_ingredient = other_ingredient
-        if (self.other_ingredient is not None):
-            self.other_ingredient.dest_x -= GRID_WIDTH
-            
-            
-    # self.playfield.animating and self.swapping
-    if (self.x < self.dest_x): 
-        self.x += self.speed
-        if (self.x < self.col * GRID_WIDTH + OFFSET_X + 1): 
-            self.x = self.col * GRID_WIDTH + OFFSET_X + 1
-        if (self.other_ingredient is not None):
-            if (self.other_ingredient.x > self.other_ingredient.dest_x): 
-                self.other_ingredient.x = self.other_ingredient.speed
-                if (self.other_ingredient.x < self.other_ingredient.col * GRID_WIDTH + OFFSET_X + 1): 
-                    self.other_ingredient.x = self.other_ingredient.col * GRID_WIDTH + OFFSET_X + 1
-    """
-    
-    
-    ###def draw(self, screen):
-        ###screen.blit(self.image, self.rect)
-        

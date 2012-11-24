@@ -1,8 +1,6 @@
 """
  Hurry Up Chef
  Developed by Team Super Group
-
- http://icecreamcola.com/CS113/Design_Document_Draft.pdf
 """
 import os, sys, pygame
 from playfield import *
@@ -20,12 +18,12 @@ class Game(object):
         pygame.display.set_caption("Hurry Up Chef") # set the current window caption
         pygame.display.set_icon(Image.load_image('joystick.png')) # change the system image for the display window
         self.font = pygame.font.Font(os.path.join('font', 'freesansbold.ttf'), 25) # create a new Font object from a file
-        #pygame.mouse.set_visible(False) # hide the mouse cursor
+        pygame.mouse.set_visible(False) # hide the mouse cursor
         pygame.key.set_repeat(20,120) # generate multiple KEYDOWN events from keys held down
         self.clock = pygame.time.Clock() # create an object to help track time
         self.timeboard = Timeboard()
-        pygame.time.set_timer(UPDATE_TIMEBOARD, 1000) # call UPDATE_TIMEBOARD event every 1 seconds        
-        ###pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
+        pygame.time.set_timer(UPDATE_TIMEBOARD, SECOND) # call UPDATE_TIMEBOARD event every 1 seconds          
+        pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
         self.init() # initialize the game
         
     # initialize the game
@@ -38,10 +36,6 @@ class Game(object):
         self.playfield = Playfield() # load playfield
         self.game_over = False
         self.game_quit = False
-        
-        # test explosed sprite
-        self.explosed_group = pygame.sprite.RenderPlain()
-        #self.explosed_group.add(Explode())
         
     # quit the game
     def quit(self):
@@ -69,15 +63,13 @@ class Game(object):
                     pygame.key.set_repeat(20,120) # prevent multiple KEYDOWN event for K_SPACE
                     if not self.game_over and not self.playfield.animating:
                         self.playfield.swap()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+                    pygame.key.set_repeat(20,120)
+                    self.playfield.print_dictionary()
                 elif event.type == UPDATE_PLAYFIELD or (event.type == pygame.KEYDOWN and event.key == pygame.K_w):
                     if not self.game_over:
                         print 'moveup'
-                        ###self.playfield.move_up()
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_t:
-                    pygame.key.set_repeat(20,120)
-                    if not self.game_over and not self.playfield.animating:
-                        print 'add explode sprite'
-                        self.explosed_group.add(Explode())
+                        self.playfield.move_up()
                 elif event.type == UPDATE_TIMEBOARD:
                     self.timeboard.update()
                     self.timeboard.print_time()                 
@@ -89,12 +81,8 @@ class Game(object):
             self.playfield.tick.update(pygame.time.get_ticks())
             self.playfield.ingredient_group.update(pygame.time.get_ticks())
             self.playfield.cursor_group.update(pygame.time.get_ticks())
-            
-            self.explosed_group.update(pygame.time.get_ticks())
-            
-            # check for game over
-            ###if not self.playfield.top_row_empty():
-                ###self.game_over = True
+            if not self.playfield.top_row_empty(): # check for game over
+                self.game_over = True
             # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
             
             
@@ -102,16 +90,12 @@ class Game(object):
             # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
             self.screen.fill(COLOR) # clear the screen
             self.screen.blit(self.BACKGROUND, POSITION) # draw background
-            ###self.playfield.draw(self.screen) # draw playfield
             self.playfield.ingredient_group.draw(self.screen)
             self.screen.blit(self.OVERLAY, POSITION) # draw background_overlay
             self.playfield.cursor_group.draw(self.screen) # draw cursor
             self.screen.blit(self.SCORE, (SCORE_X, SCORE_Y)) # draw score board
             self.screen.blit(self.TIME, (TIME_X, TIME_Y)) # draw time board
             self.screen.blit(self.CHEF, (CHEF_X, CHEF_Y)) # draw chef
-            
-            self.explosed_group.draw(self.screen)
-            
             # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
             
             

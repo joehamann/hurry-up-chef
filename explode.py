@@ -6,6 +6,7 @@ class Explode(pygame.sprite.Sprite):
     def __init__(self, playfield, col, row):
         pygame.sprite.Sprite.__init__(self)
         self.playfield = playfield
+        self.playfield.animating = True
         self.col = col
         self.row = row
         self.x = self.col * GRID_WIDTH + OFFSET_X + 1
@@ -15,10 +16,10 @@ class Explode(pygame.sprite.Sprite):
         
         # Track the time we started, and the time between updates.
         # Then we can figure out when we have to switch the image.
-        self._delay = 500
+        self._delay = 25 #25 500
         self._last_time = playfield.tick.last_time
-        self._frame = playfield.tick.frame
-        self.image = self._images[self._frame]
+        self._frame = -1
+        self.image = self._images[0]
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         
@@ -34,6 +35,9 @@ class Explode(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         
-        if self._frame + 1 == len(self._images):
-            self.remove(self.groups())
+        if self._frame == len(self._images) - 1:
+            self.playfield.remove_ingredient(self.row, self.col)
+            self.playfield.clear_set.discard((self.row, self.col))
+            if not self.playfield.clear_set:
+                self.playfield.test_move_down()
         
