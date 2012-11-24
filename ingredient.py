@@ -12,9 +12,9 @@ class Ingredient(pygame.sprite.Sprite):
         self.x = self.col * GRID_WIDTH + OFFSET_X + 1
         self.y = self.row * GRID_HEIGHT + OFFSET_Y + 1
         
-        self.speed = 5
-        self.moving_left = False
+        self.speed = 25
         self.moving_right = False
+        self.moving_left = False
         self.ingredient_to_left = None
         self.ingredient_to_right = None
         self.dest_left = self.x - GRID_WIDTH
@@ -39,11 +39,11 @@ class Ingredient(pygame.sprite.Sprite):
         self.rect.topleft = (self.x, self.y)
         
     def move_right(self, right_ingredient):
-        self.moving_left = True
+        self.moving_right = True
         self.ingredient_to_right = right_ingredient
         
     def move_left(self, left_ingredient):
-        self.moving_right = True
+        self.moving_left = True
         self.ingredient_to_left = left_ingredient
         
     def update(self, t):
@@ -59,60 +59,26 @@ class Ingredient(pygame.sprite.Sprite):
         self.rect.topleft = (self.x, self.y)
         
         # swapping logic
-        if (self.moving_left):
+        if (self.moving_right):
             if (self.x < self.dest_right):
                 self.x += self.speed
             else:
-                self.moving_left = False
-                print "swappingleft: ",self.row, ",", self.col
-                if (self.ingredient_to_right is not None):
-                    if (not self.ingredient_to_right.moving_right):
-                        if (self.playfield.animating):
-                            print 'FROM LEFT done swapping'
-                            row = self.row
-                            col = self.col
-                            temp = self.playfield.gridbox[row][col]
-                            self.playfield.gridbox[row][col] = self.playfield.gridbox[row][col+1]
-                            self.playfield.gridbox[row][col+1] = temp
-                            self.playfield.remove_ingredient(self.row, self.col)
-                            self.playfield.remove_ingredient(self.row, self.col+1)
-                            self.playfield.add_ingredient(self.name, self.row, self.col+1)
-                            self.playfield.add_ingredient(self.ingredient_to_right.name, self.row, self.col)
-                            """
-                            """
-                        self.playfield.animating = False
-        """
-                else:
-                    print 'done moving left to right and nothing was on right'
-        """
+                self.moving_right = False
+                print "moved right: ",self.row, ",", self.col
+                if (self.ingredient_to_right is None or (self.ingredient_to_right is not None and not self.ingredient_to_right.moving_left)):
+                    print 'done swapping moved from left to right'
+                    self.playfield.update_swap(self.row, self.col)
         
-        if (self.moving_right):
+        if (self.moving_left):
             if (self.x > self.dest_left):
                 self.x -= self.speed
             else:
-                self.moving_right = False
-                print "swappingright: ",self.row, ",", self.col
-                if (self.ingredient_to_left is not None):
-                    if (not self.ingredient_to_left.moving_left):
-                        if (self.playfield.animating):
-                            print 'FROM RIGHT done swapping'
-                            row = self.row
-                            col = self.col
-                            #print self.row, ",", self.col
-                            temp = self.playfield.gridbox[row][col]
-                            self.playfield.gridbox[row][col] = self.playfield.gridbox[row][col-1]
-                            self.playfield.gridbox[row][col-1] = temp
-                            self.playfield.remove_ingredient(self.row, self.col)
-                            self.playfield.remove_ingredient(self.row, self.col-1)
-                            self.playfield.add_ingredient(self.name, self.row, self.col-1)
-                            self.playfield.add_ingredient(self.ingredient_to_left.name, self.row, self.col)
-                            """
-                            """
-                        self.playfield.animating = False
-        """
-                else:
-                    print 'done moving left to right and nothing was on right'
-        """
+                self.moving_left = False
+                print "moved left: ",self.row, ",", self.col
+                if (self.ingredient_to_left is None or (self.ingredient_to_left is not None and not self.ingredient_to_left.moving_right)):
+                    print 'done swapping moved from right to left'
+                    self.playfield.update_swap(self.row, self.col-1)
+                    
         
         
         

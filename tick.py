@@ -10,7 +10,7 @@ class Tick(pygame.sprite.Sprite):
         self._images = 2
         self.delay = 500
         self.last_time = 0
-        self.frame = 0
+        self.frame = -1
         
         # Call update to set our first image.
         #self.update(pygame.time.get_ticks())

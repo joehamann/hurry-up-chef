@@ -24,7 +24,7 @@ class Game(object):
         pygame.key.set_repeat(20,120) # generate multiple KEYDOWN events from keys held down
         self.clock = pygame.time.Clock() # create an object to help track time
         self.timeboard = Timeboard()
-        pygame.time.set_timer(UPDATE_TIMEBOARD, 1000) # call UPDATE_TIMEBOARD event every 1 seconds
+        pygame.time.set_timer(UPDATE_TIMEBOARD, 1000) # call UPDATE_TIMEBOARD event every 1 seconds        
         ###pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
         self.init() # initialize the game
         
@@ -80,7 +80,7 @@ class Game(object):
                         self.explosed_group.add(Explode())
                 elif event.type == UPDATE_TIMEBOARD:
                     self.timeboard.update()
-                    self.timeboard.print_time()                
+                    self.timeboard.print_time()                 
             # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
             
             

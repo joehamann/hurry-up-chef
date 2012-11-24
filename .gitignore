@@ -6,3 +6,4 @@ _bak
 _bak/*
 _bak/
 .DS_Store
+*.bak
