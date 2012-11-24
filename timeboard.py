@@ -1,6 +1,6 @@
 class Timeboard(object):
     # initialize timeboard with current game ticks
-        def __init__(self, ticks):
+        def __init__(self):
                 self.seconds = 0
                 
         def update(self):

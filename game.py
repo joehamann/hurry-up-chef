@@ -6,6 +6,7 @@
 """
 import os, sys, pygame
 from playfield import *
+from explode import *
 from timeboard import *
 
 # Game class to run() the game
@@ -22,9 +23,9 @@ class Game(object):
         #pygame.mouse.set_visible(False) # hide the mouse cursor
         pygame.key.set_repeat(20,120) # generate multiple KEYDOWN events from keys held down
         self.clock = pygame.time.Clock() # create an object to help track time
-        self.timeboard = Timeboard(pygame.time.get_ticks())
-        ###pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
+        self.timeboard = Timeboard()
         pygame.time.set_timer(UPDATE_TIMEBOARD, 1000) # call UPDATE_TIMEBOARD event every 1 seconds
+        ###pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
         self.init() # initialize the game
         
     # initialize the game
@@ -37,6 +38,10 @@ class Game(object):
         self.playfield = Playfield() # load playfield
         self.game_over = False
         self.game_quit = False
+        
+        # test explosed sprite
+        self.explosed_group = pygame.sprite.RenderPlain()
+        #self.explosed_group.add(Explode())
         
     # quit the game
     def quit(self):
@@ -68,9 +73,14 @@ class Game(object):
                     if not self.game_over:
                         print 'moveup'
                         ###self.playfield.move_up()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_t:
+                    pygame.key.set_repeat(20,120)
+                    if not self.game_over and not self.playfield.animating:
+                        print 'add explode sprite'
+                        self.explosed_group.add(Explode())
                 elif event.type == UPDATE_TIMEBOARD:
                     self.timeboard.update()
-                    self.timeboard.print_time()
+                    self.timeboard.print_time()                
             # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
             
             
@@ -79,6 +89,9 @@ class Game(object):
             self.playfield.tick.update(pygame.time.get_ticks())
             self.playfield.ingredient_group.update(pygame.time.get_ticks())
             self.playfield.cursor_group.update(pygame.time.get_ticks())
+            
+            self.explosed_group.update(pygame.time.get_ticks())
+            
             # check for game over
             ###if not self.playfield.top_row_empty():
                 ###self.game_over = True
@@ -96,6 +109,9 @@ class Game(object):
             self.screen.blit(self.SCORE, (SCORE_X, SCORE_Y)) # draw score board
             self.screen.blit(self.TIME, (TIME_X, TIME_Y)) # draw time board
             self.screen.blit(self.CHEF, (CHEF_X, CHEF_Y)) # draw chef
+            
+            self.explosed_group.draw(self.screen)
+            
             # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
             
             
