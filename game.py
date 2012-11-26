@@ -6,6 +6,7 @@ import os, sys, pygame
 from playfield import *
 from explode import *
 from timeboard import *
+from digit import *
 
 # Game class to run() the game
 class Game(object):
@@ -22,6 +23,10 @@ class Game(object):
         pygame.key.set_repeat(20,120) # generate multiple KEYDOWN events from keys held down
         self.clock = pygame.time.Clock() # create an object to help track time
         self.timeboard = Timeboard()
+        self.digit = Digit(100,100,9)
+        
+        self.digit_group = pygame.sprite.RenderPlain()
+        self.digit_group.add(self.digit)
         pygame.time.set_timer(UPDATE_TIMEBOARD, SECOND) # call UPDATE_TIMEBOARD event every 1 seconds          
         pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
         self.init() # initialize the game
@@ -91,11 +96,13 @@ class Game(object):
             self.screen.fill(COLOR) # clear the screen
             self.screen.blit(self.BACKGROUND, POSITION) # draw background
             self.playfield.ingredient_group.draw(self.screen)
+            
             self.screen.blit(self.OVERLAY, POSITION) # draw background_overlay
             self.playfield.cursor_group.draw(self.screen) # draw cursor
             self.screen.blit(self.SCORE, (SCORE_X, SCORE_Y)) # draw score board
             self.screen.blit(self.TIME, (TIME_X, TIME_Y)) # draw time board
             self.screen.blit(self.CHEF, (CHEF_X, CHEF_Y)) # draw chef
+            self.digit_group.draw(self.screen)
             # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
             
             
