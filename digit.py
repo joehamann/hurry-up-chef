@@ -15,3 +15,9 @@ class Digit(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.topleft = (self.x, self.y)            
             
+    def set_digit(self,digit):
+        self._frame = digit
+        self.image = self._images[self._frame]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)          
+    

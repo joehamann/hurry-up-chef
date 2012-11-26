@@ -7,7 +7,7 @@ class Tick(pygame.sprite.Sprite):
         
         # Track the time we started, and the time between updates.
         # Then we can figure out when we have to switch the image.
-        self._images = 2
+        self._images = 1
         self.delay = 500
         self.last_time = 0
         self.frame = -1

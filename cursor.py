@@ -7,14 +7,12 @@ class Cursor(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.col = 2
         self.row = 8
-        
-        self._images = Image.load_sliced_sprites(124, 72, 'cursorsprite.png')
-
         # Track the time we started, and the time between updates.
         # Then we can figure out when we have to switch the image.
         self._delay = playfield.tick.delay
         self._last_time = playfield.tick.last_time
         self._frame = playfield.tick.frame
+        self._images = Image.load_sliced_sprites(124, 72, 'cursorsprite.png')
         self.image = self._images[self._frame]
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.col * GRID_WIDTH + OFFSET_X - 11, self.row * GRID_HEIGHT + OFFSET_Y - 11)
@@ -35,6 +33,9 @@ class Cursor(pygame.sprite.Sprite):
         if self.col + 1 <= COLS - 2:
             self.col += 1
             
+    def inanimate(self):
+        self._images = Image.load_sliced_sprites(124, 72, 'cursor.png')
+            
     def update(self, t):
         # Note that this doesn't work if it's been more that self._delay
         # time between calls to update(); we only update the image once
@@ -46,7 +47,4 @@ class Cursor(pygame.sprite.Sprite):
             self._last_time = t
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.col * GRID_WIDTH + OFFSET_X - 11, self.row * GRID_HEIGHT + OFFSET_Y - 11)
-        
-    ###def draw(self, screen):
-        ###screen.blit(self.image, self.rect)
         
