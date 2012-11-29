@@ -41,8 +41,8 @@ class Game(object):
         self.title_screen.draw(self.screen)
         self.sound.introMusic.stop()
         pygame.mixer.music.play(-1)
-        self.timeboard = Timeboard(100,100)
-        self.scoreboard = Scoreboard(600,200,0)
+        self.timeboard = Timeboard(50,180)
+        self.scoreboard = Scoreboard(780,250,0)
         pygame.time.set_timer(UPDATE_TIMEBOARD, SECOND) # call UPDATE_TIMEBOARD event every 1 seconds        
         pygame.time.set_timer(UPDATE_PLAYFIELD, INTERVAL) # call UPDATE_PLAYFIELD event every 5 seconds
         
